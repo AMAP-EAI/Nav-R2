@@ -1,2 +1,2 @@
 # Nav-R2
-Official implementation of paper [x]
+Official Implementation of paper: ```Nav-R2:Dual‑Relation Reasoning for Generalizable Open‑Vocabulary Object‑Goal Navigation```
