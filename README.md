@@ -1,4 +1,25 @@
-# 
+## TOC
+- [Overview](#overview)
+- [Teaser](#teaser)
+- [Pipeline and Structure](#pipeline-and-structure)
+- [Abstract](#abstract)
+- [Contributions](#contributions)
+- [Getting started with Nav-R2](#getting-started-with-nav-r2)
+    - [Training](#training)
+        - [(1) Install conda environment following](#1-install-conda-environment-following)
+        - [(2) Install extra libraries](#2-install-extra-libraries)
+        - [(3) Strat Training](#3-strat-training)
+    - [Evaluation](#evaluation)
+        - [(1) Install conda environment following steps below](#1-install-conda-environment-following-steps-below)
+        - [(2) Install extra libraries](#2-install-extra-libraries-1)
+    - [Datasets](#datasets)
+    - [Model Weight](#model-weight)
+- [Results on OVON](#results-on-ovon)
+- [Ablation Study](#ablation-study)
+    - [Components in CoT](#components-in-cot)
+    - [Memory Compression Strategy](#memory-compression-strategy)
+    - [Memory Maintenance](#memory-maintenance)
+
 
 # Nav-R2
 <!-- [![paper](https://img.shields.io/badge/arXiv-Paper-blue.svg)](https://arxiv.org/abs/) -->
@@ -45,7 +66,7 @@ transformers, trl, and flash_attn \
 #### (2) Install extra libraries
 ```pip install -e environment-modules-customed/transformers_4.51.3-xwt-customed/transformers``` \
 ```pip install environment-modules-customed/flash_attn-2.7.4.post1+cu12torch2.6cxx11abiTRUE-cp310-cp310-linux_x86_64.whl``` \
-```pip install environment-modules-customed/trl``` \
+```pip install environment-modules-customed/trl```
 #### (3) Strat Training
 To start training, use ms-swift framework and apply our modifications to the framework, then run through a shell script(switch running command to torchrun when it is needed like run in a distributed mode):
 ```shell
@@ -131,7 +152,7 @@ Dataset can be downloaded at: \
 (1) [Huggingface](https://huggingface.co/datasets/Chrono666/Nav-R2-OVON-CoT-Dataset) \
 (2) [aDrive(coming)]()
 
-### **Model Weight**: \
+### **Model Weight**:
 Pretrained Nav-R2 model weights can be downloaded at: \
 (1) [Huggingface](https://huggingface.co/Chrono666/Nav-R2) \
 (2) [aDrive(coming)]()
