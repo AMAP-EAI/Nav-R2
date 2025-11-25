@@ -139,9 +139,9 @@ Pretrained Nav-R2 model weights can be downloaded at: \
 
 ## Results on OVON
 Here shows the results on OVON dataset. Nav-R2 is trained via **ONLY SFT** receiving **ONLY RGB observations** from **ONLY first-person view**, and achieves the best SR on the val-unseen split. 
-<!-- <p align="center">
+<p align="center">
  <img src="figs/main-results.png" width="100%">
-</p> -->
+</p>
 
 | Method       | S.RGB | Dep | Odo | SFT | RL | Sim | Real | QA | Map | SR ↑ (Val-Seen) | SPL ↑ (Val-Seen) | SR ↑ (Val-Seen-Synonyms) | SPL ↑ (Val-Seen-Synonyms) | SR ↑ (Val-Unseen) | SPL ↑ (Val-Unseen) |
 |--------------|-------|-----|-----|-----|----|-----|------|----|-----|-----------------|------------------|-------------------------|--------------------------|-------------------|--------------------|
@@ -160,16 +160,36 @@ Here shows the results on OVON dataset. Nav-R2 is trained via **ONLY SFT** recei
 ## Ablation Study
 ### Components in CoT
 <p align="center">
- <img src="figs/ablation-study-components-in-CoT.png" width="100%">
+ <img src="figs/ablation-study-components-in-CoT.png" width="70%">
 </p>
+
+| Percep | Target-Env | Env-Task | SR ↑ (Val-Seen) | SPL ↑ (Val-Seen) | SR ↑ (Val-Seen-Synonyms) | SPL ↑ (Val-Seen-Synonyms) | SR ↑ (Val-Unseen) | SPL ↑ (Val-Unseen) |
+|--------|------------|----------|-----------------|------------------|-------------------------|--------------------------|-------------------|--------------------|
+|        |            |          | 22.7            | 14.8             | 17.4                    | 11.8                     | 14.8              | 10.0               |
+| ✔      |            |          | 25.4            | 16.5             | 28.1                    | 17.2                     | 24.5              | 15.9               |
+| ✔      | ✔          |          | 29.1            | 18.0             | 27.8                    | 17.9                     | 25.4              | 16.3               |
+| ✔      | ✔          | ✔        | 32.2            | 18.8             | 30.8                    | 18.8                     | 28.4              | 17.1               |
 
 ### Memory Compression Strategy
 <p align="center">
- <img src="figs/ablation-study-memory-compression.png" width="100%">
+ <img src="figs/ablation-study-memory-compression.png" width="60%">
 </p>
+
+| Instruction | Current Frame | SR ↑ (Val-Seen) | SPL ↑ (Val-Seen) | SR ↑ (Val-Seen-Synonyms) | SPL ↑ (Val-Seen-Synonyms) | SR ↑ (Val-Unseen) | SPL ↑ (Val-Unseen) |
+|-------------|---------------|-----------------|------------------|-------------------------|--------------------------|-------------------|--------------------|
+| ✔           |               | 42.2            | 21.5             | 37.5                    | 20.6                     | 39.8              | 20.5               |
+| ✔           | ✔             | 45.0            | 21.1             | 43.2                    | 20.9                     | 42.0              | 18.8               |
+
 
 ### Memory Maintenance
 <p align="center">
- <img src="figs/ablation-study-memory-maintenance.png" width="100%">
+ <img src="figs/ablation-study-memory-maintenance.png" width="60%">
 </p>
+
+| Removal | Fusion | Temp | Rele | SR ↑ (Val-Seen) | SPL ↑ (Val-Seen) | SR ↑ (Val-Seen-Synonyms) | SPL ↑ (Val-Seen-Synonyms) | SR ↑ (Val-Unseen) | SPL ↑ (Val-Unseen) |
+|---------|--------|------|------|-----------------|------------------|-------------------------|--------------------------|-------------------|--------------------|
+| ✔       |        | ✔    |      | 45.0            | 21.1             | 43.2                    | 20.9                     | 42.0              | 18.8               |
+| ✔       |        |      | ✔    | 47.7            | 20.6             | 44.8                    | 20.5                     | 41.1              | 16.4               |
+|         | ✔      | ✔    |      | 43.4            | 21.8             | 43.1                    | 21.8                     | 39.5              | 20.2               |
+|         | ✔      |      | ✔    | 45.6            | 21.0             | 45.9                    | 21.1                     | 44.0              | 18.0               |
 
