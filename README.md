@@ -1,6 +1,5 @@
 ## TOC
 - [Overview](#overview)
-- [Teaser](#teaser)
 - [Pipeline and Structure](#pipeline-and-structure)
 - [Abstract](#abstract)
 - [Contributions](#contributions)
@@ -27,13 +26,11 @@ Official Implementation of paper: ```Nav-R2:Dual‑Relation Reasoning for Genera
 <p align="center">
  <img src="figs/title.png" width="100%">
 </p>
-
-## Overview
-### Teaser
 <p align="center">
  <img src="figs/teaser.png" width="100%">
 </p>
 
+## Overview
 ### Pipeline and Structure
 <p align="center">
  <img src="figs/pipeline.png" width="100%">
