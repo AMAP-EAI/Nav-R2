@@ -139,9 +139,23 @@ Pretrained Nav-R2 model weights can be downloaded at: \
 
 ## Results on OVON
 Here shows the results on OVON dataset. Nav-R2 is trained via **ONLY SFT** receiving **ONLY RGB observations** from **ONLY first-person view**, and achieves the best SR on the val-unseen split. 
-<p align="center">
+<!-- <p align="center">
  <img src="figs/main-results.png" width="100%">
-</p>
+</p> -->
+
+| Method       | S.RGB | Dep | Odo | SFT | RL | Sim | Real | QA | Map | SR ↑ (Val-Seen) | SPL ↑ (Val-Seen) | SR ↑ (Val-Seen-Synonyms) | SPL ↑ (Val-Seen-Synonyms) | SR ↑ (Val-Unseen) | SPL ↑ (Val-Unseen) |
+|--------------|-------|-----|-----|-----|----|-----|------|----|-----|-----------------|------------------|-------------------------|--------------------------|-------------------|--------------------|
+| BC           | ✔     |     |     |     |    | ✔   |      |    |     | 11.1            | 4.5              | 9.9                     | 3.8                      | 5.4               | 1.9                |
+| DAgger       | ✔     |     |     |     |    | ✔   |      |    |     | 11.1            | 4.5              | 9.9                     | 3.8                      | 5.4               | 1.9                |
+| RL           | ✔     |     |     |     | ✔  | ✔   |      |    |     | 18.1            | 9.4              | 15.0                    | 7.4                      | 10.2              | 4.7                |
+| DAgRL        | ✔     |     |     | ✔   | ✔  | ✔   |      |    |     | 41.3            | 21.2             | 29.4                    | 14.4                     | 18.3              | 7.9                |
+| BCRL         | ✔     |     |     | ✔   | ✔  | ✔   |      |    |     | 39.2            | 18.7             | 27.8                    | 11.7                     | 18.6              | 7.5                |
+| VLFM         | ✔     | ✔   | ✔   |     | ✔  | ✔   |      |    | ✔   | 35.2            | 18.6             | 32.4                    | 17.3                     | 35.2              | 19.6               |
+| DAgRL+OD     | ✔     |     |     | ✔   | ✔  | ✔   |      |    |     | 38.5            | 21.1             | 39.0                    | 21.4                     | 37.1              | 19.8               |
+| Nav-R1       | ✔     | ✔   |     | ✔   | ✔  | ✔   |      | ✔  |     | 58.4            | 26.3             | 48.1                    | 23.1                     | 42.2              | 20.1               |
+| MTU3D        | ✔     | ✔   |     | ✔   |    | ✔   | ✔    | ✔  | ✔   | 55.0            | 23.6             | 45.0                    | 14.7                     | 40.8              | 12.1               |
+| Uni-NaVid    | ✔     |     |     | ✔   |    | ✔   | ✔    | ✔  |     | 41.3            | 21.1             | 43.9                    | 21.8                     | 39.5              | 19.8               |
+| **Nav-R2**     | ✔     |     |     | ✔   |    | ✔   |      |    |     | 45.6            | 21.0             | 45.9                    | 21.1                     | 44.0              | 18.0               |
 
 ## Ablation Study
 ### Components in CoT
