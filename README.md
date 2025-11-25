@@ -22,11 +22,28 @@ Compared to previous methods, Nav-R2 achieves state-of-the-art performance in lo
 
 ## Getting started with Nav-R2
 
-- **Installation**: Install conda environment as the following steps:
+- **Training**: Install conda environment following steps below:
 
-```
+```shell
+conda create -n Nav-R2-training
 pip install -r requirements-for-training.txt
 # attention:
 # three libraries should be installed from source files in the environment-modules-customed folder:
 # transformers, trl, and flash_attn
 ```
+
+- **Evaluation**: Install conda environment following steps below:
+
+```shell
+conda create -n Nav-R2-evaluation python=3.9.19
+pip install -r requirements-for-evaluation-on-OVON.txt
+# attention:
+# four libraries should be installed from source files in the environment-modules-customed folder:
+# flash_attn, transformers, habitat_lab, and habitat-baseline
+pip install environment-modules-customed/flash_attn-2.7.4.post1+cu12torch2.6cxx11abiTRUE-cp310-cp310-linux_x86_64.whl
+# and please install transformers first, then habitat_lab, finally habitat-baseline
+pip install -e environment-modules-customed/transformers_4.51.3-xwt-customed/transformers
+pip install -e environment-modules-customed/habitat-related/habitat-lab
+pip install -e environment-modules-customed/habitat-related/habitat-baselines
+```
+
