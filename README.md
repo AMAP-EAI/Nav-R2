@@ -143,6 +143,12 @@ Next, please install transformers first, then habitat_lab, finally habitat-basel
 ```pip install -e environment-modules-customed/habitat-related/habitat-lab``` \
 ```pip install -e environment-modules-customed/habitat-related/habitat-baselines```
 
+#### (3) Start evaluation:
+
+```shell
+cd Nav-R2-evaluation-ovon/
+```
+
 
 ### **Datasets**:
 Dataset can be downloaded at: \
