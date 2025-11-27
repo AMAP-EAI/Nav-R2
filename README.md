@@ -140,20 +140,27 @@ Install flash_attn: \
 Next, please install transformers first, then habitat_lab, finally habitat-baseline:
 
 ```pip install -e environment-modules-customed/transformers_4.51.3-xwt-customed/transformers``` \
-```pip install -e environment-modules-customed/habitat-related/habitat-lab``` \
-```pip install -e environment-modules-customed/habitat-related/habitat-baselines```
+```pip install -e environment-modules-customed/habitat-related/ovon/habitat-lab``` \
+```pip install -e environment-modules-customed/habitat-related/ovon/habitat-baselines```
 
 #### (3) Start evaluation:
-
 ```shell
-cd Nav-R2-evaluation-ovon/
+cd Nav-R2-evaluation-ovon
+./eval_citywalker_ovon.sh 0,1,2,3,4,5 # for running in a parallel way on multiple gpus 
+./eval_citywalker_ovon.sh 0,1,2,3,4,5 1 # for debug using only one gpu
 ```
 
 
 ### **Datasets**:
-Dataset can be downloaded at: \
+#### Textual Dataset
+Our OVON dataset with reasoning data can be downloaded at: \
 (1) [Huggingface](https://huggingface.co/datasets/Chrono666/Nav-R2-OVON-CoT-Dataset) \
 (2) [aDrive(coming)]()
+
+#### Image Dataset
+The complete expert trajectory data(frame-by-frame images, frame-by-frame action names and so on) collected based on the OVON dataset from Habitat can be downloaded from the link below: \
+(1) [BaiduNetDisk(Uploading)](https://pan.baidu.com/s/12AJQ5TFq9fQCniJ-wC-hRg?pwd=6666) \
+(2) 
 
 ### **Model Weight**:
 Pretrained Nav-R2 model weights can be downloaded at: \
