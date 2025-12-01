@@ -1,25 +1,40 @@
 # Nav-R2
 
+<!-- [![paper](https://img.shields.io/badge/arXiv-Paper-blue.svg)](https://arxiv.org/abs/) -->
+Official Implementation of paper: \
+```Nav-R2:Dual‑Relation Reasoning for Generalizable Open‑Vocabulary Object‑Goal Navigation```
+
+
+## Table of Contents
+
 - [Overview](#overview)
-    - [Pipeline and Structure](#pipeline-and-structure)
-- [Abstract](#abstract)
-- [Contributions](#contributions)
-- [Getting started with Nav-R2](#getting-started-with-nav-r2)
-    - [Datasets Preparation](#datasets-preparation)
-        - [Textual Dataset](#textual-dataset)
-        - [Image Dataset](#image-dataset)
-    - [Model Weight](#model-weight)
-    - [Training](#training)
-    - [Evaluation](#evaluation)
-- [Results on OVON](#results-on-ovon)
-- [Ablation Study](#ablation-study)
+  - [Pipeline and Structure](#pipeline-and-structure)
+  - [Abstract](#abstract)
+  - [Contributions](#contributions)
+  - [Results on OVON](#results-on-ovon)
+  - [Ablation Study](#ablation-study)
     - [Components in CoT](#components-in-cot)
     - [Memory Compression Strategy](#memory-compression-strategy)
     - [Memory Maintenance](#memory-maintenance)
+- [Getting started with Nav-R2](#getting-started-with-nav-r2)
+  - [Datasets Preparation](#datasets-preparation)
+    - [Textual Dataset](#textual-dataset)
+    - [Image Dataset](#image-dataset)
+  - [Model Weight](#model-weight)
+  - [Training](#training)
+    - [(1) Install conda environment following](#1-install-conda-environment-following)
+    - [(2) Install extra libraries](#2-install-extra-libraries)
+    - [(3) Start Training](#3-start-training)
+  - [Evaluation](#evaluation)
+    - [(1) Install conda environment following steps below](#1-install-conda-environment-following-steps-below)
+    - [(2) Install extra libraries](#2-install-extra-libraries-1)
+    - [(3) Start evaluation](#3-start-evaluation)
 
 
-<!-- [![paper](https://img.shields.io/badge/arXiv-Paper-blue.svg)](https://arxiv.org/abs/) -->
-Official Implementation of paper: ```Nav-R2:Dual‑Relation Reasoning for Generalizable Open‑Vocabulary Object‑Goal Navigation```
+
+
+
+
 <p align="center">
  <img src="figs/title.png" width="100%">
 </p>
@@ -33,19 +48,75 @@ Official Implementation of paper: ```Nav-R2:Dual‑Relation Reasoning for Genera
  <img src="figs/pipeline.png" width="100%">
 </p>
 
-## Abstract
+### Abstract
 Object-goal navigation in open-vocabulary settings requires agents to locate novel objects in unseen environments, yet existing approaches suffer from opaque decision-making processes and low success rate on locating unseen objects.
 To address these challenges, we propose Nav-R2, a framework that explicitly models two critical types of relationships, target-environment modeling and environment-action planning, through structured Chain-of-Thought (CoT) reasoning coupled with a Similarity-Aware Memory.
 We construct a Nav$R^2$-CoT dataset that teaches the model to perceive the environment, focus on target-related objects in the surrounding context and finally make future action plans.
 Our SA-Mem preserves the most target-relevant and current observation-relevant features from both temporal and semantic perspectives by compressing video frames and fusing historical observations, while introducing no additional parameters.
 Compared to previous methods, Nav-R2 achieves state-of-the-art performance in localizing unseen objects through a streamlined and efficient pipeline, avoiding overfitting to seen object categories while maintaining real-time inference at 2Hz.
 
-## Contributions
+### Contributions
 (1) A relational reasoning framework for object-goal navigation that explicitly models the **target-environment** (perception) and **environment–action**(planning) relationships, integrating this structured reasoning in a streamlined pipeline without introducing additional model parameters.
 
 (2) A novel Chain-of-Thought dataset specifically designed for training a generalizable object-goal navigation model capable of reasoning and modeling both two relationships.
 
 (3) A vision-language reasoning model, Nav-R2, just trained via supervised fine-tuning on first-person RGB frames, achieving state-of-the-art performance in open-vocabulary ObjectNav and real-time inference at around 2Hz.
+
+### Results on OVON
+Here shows the results on OVON dataset. Nav-R2 is trained via **ONLY SFT** receiving **ONLY RGB observations** from **ONLY first-person view**, and achieves the best SR on the val-unseen split. 
+<p align="center">
+ <img src="figs/main-results.png" width="100%">
+</p>
+
+| Method       | S.RGB | Dep | Odo | SFT | RL | Sim | Real | QA | Map | SR ↑ (Val-Seen) | SPL ↑ (Val-Seen) | SR ↑ (Val-Seen-Synonyms) | SPL ↑ (Val-Seen-Synonyms) | SR ↑ (Val-Unseen) | SPL ↑ (Val-Unseen) |
+|--------------|-------|-----|-----|-----|----|-----|------|----|-----|-----------------|------------------|-------------------------|--------------------------|-------------------|--------------------|
+| BC           | ✔     |     |     |     |    | ✔   |      |    |     | 11.1            | 4.5              | 9.9                     | 3.8                      | 5.4               | 1.9                |
+| DAgger       | ✔     |     |     |     |    | ✔   |      |    |     | 11.1            | 4.5              | 9.9                     | 3.8                      | 5.4               | 1.9                |
+| RL           | ✔     |     |     |     | ✔  | ✔   |      |    |     | 18.1            | 9.4              | 15.0                    | 7.4                      | 10.2              | 4.7                |
+| DAgRL        | ✔     |     |     | ✔   | ✔  | ✔   |      |    |     | 41.3            | 21.2             | 29.4                    | 14.4                     | 18.3              | 7.9                |
+| BCRL         | ✔     |     |     | ✔   | ✔  | ✔   |      |    |     | 39.2            | 18.7             | 27.8                    | 11.7                     | 18.6              | 7.5                |
+| VLFM         | ✔     | ✔   | ✔   |     | ✔  | ✔   |      |    | ✔   | 35.2            | 18.6             | 32.4                    | 17.3                     | 35.2              | 19.6               |
+| DAgRL+OD     | ✔     |     |     | ✔   | ✔  | ✔   |      |    |     | 38.5            | 21.1             | 39.0                    | 21.4                     | 37.1              | 19.8               |
+| Nav-R1       | ✔     | ✔   |     | ✔   | ✔  | ✔   |      | ✔  |     | 58.4            | 26.3             | 48.1                    | 23.1                     | 42.2              | 20.1               |
+| MTU3D        | ✔     | ✔   |     | ✔   |    | ✔   | ✔    | ✔  | ✔   | 55.0            | 23.6             | 45.0                    | 14.7                     | 40.8              | 12.1               |
+| Uni-NaVid    | ✔     |     |     | ✔   |    | ✔   | ✔    | ✔  |     | 41.3            | 21.1             | 43.9                    | 21.8                     | 39.5              | 19.8               |
+| **Nav-R2**     | ✔     |     |     | ✔   |    | ✔   |      |    |     | 45.6            | 21.0             | 45.9                    | 21.1                     | 44.0              | 18.0               |
+
+### Ablation Study
+#### Components in CoT
+<p align="center">
+ <img src="figs/ablation-study-components-in-CoT.png" width="70%">
+</p>
+
+| Percep | Target-Env | Env-Task | SR ↑ (Val-Seen) | SPL ↑ (Val-Seen) | SR ↑ (Val-Seen-Synonyms) | SPL ↑ (Val-Seen-Synonyms) | SR ↑ (Val-Unseen) | SPL ↑ (Val-Unseen) |
+|--------|------------|----------|-----------------|------------------|-------------------------|--------------------------|-------------------|--------------------|
+|        |            |          | 22.7            | 14.8             | 17.4                    | 11.8                     | 14.8              | 10.0               |
+| ✔      |            |          | 25.4            | 16.5             | 28.1                    | 17.2                     | 24.5              | 15.9               |
+| ✔      | ✔          |          | 29.1            | 18.0             | 27.8                    | 17.9                     | 25.4              | 16.3               |
+| ✔      | ✔          | ✔        | 32.2            | 18.8             | 30.8                    | 18.8                     | 28.4              | 17.1               |
+
+#### Memory Compression Strategy
+<p align="center">
+ <img src="figs/ablation-study-memory-compression.png" width="60%">
+</p>
+
+| Instruction | Current Frame | SR ↑ (Val-Seen) | SPL ↑ (Val-Seen) | SR ↑ (Val-Seen-Synonyms) | SPL ↑ (Val-Seen-Synonyms) | SR ↑ (Val-Unseen) | SPL ↑ (Val-Unseen) |
+|-------------|---------------|-----------------|------------------|-------------------------|--------------------------|-------------------|--------------------|
+| ✔           |               | 42.2            | 21.5             | 37.5                    | 20.6                     | 39.8              | 20.5               |
+| ✔           | ✔             | 45.0            | 21.1             | 43.2                    | 20.9                     | 42.0              | 18.8               |
+
+
+#### Memory Maintenance
+<p align="center">
+ <img src="figs/ablation-study-memory-maintenance.png" width="60%">
+</p>
+
+| Removal | Fusion | Temp | Rele | SR ↑ (Val-Seen) | SPL ↑ (Val-Seen) | SR ↑ (Val-Seen-Synonyms) | SPL ↑ (Val-Seen-Synonyms) | SR ↑ (Val-Unseen) | SPL ↑ (Val-Unseen) |
+|---------|--------|------|------|-----------------|------------------|-------------------------|--------------------------|-------------------|--------------------|
+| ✔       |        | ✔    |      | 45.0            | 21.1             | 43.2                    | 20.9                     | 42.0              | 18.8               |
+| ✔       |        |      | ✔    | 47.7            | 20.6             | 44.8                    | 20.5                     | 41.1              | 16.4               |
+|         | ✔      | ✔    |      | 43.4            | 21.8             | 43.1                    | 21.8                     | 39.5              | 20.2               |
+|         | ✔      |      | ✔    | 45.6            | 21.0             | 45.9                    | 21.1                     | 44.0              | 18.0               |
 
 ## Getting started with Nav-R2
 
@@ -181,60 +252,3 @@ cd Nav-R2-evaluation-ovon
 ./eval_citywalker_ovon.sh 0,1,2,3,4,5 # for running in a parallel way on multiple gpus 
 ./eval_citywalker_ovon.sh 0,1,2,3,4,5 1 # for debug using only one gpu
 ```
-
-## Results on OVON
-Here shows the results on OVON dataset. Nav-R2 is trained via **ONLY SFT** receiving **ONLY RGB observations** from **ONLY first-person view**, and achieves the best SR on the val-unseen split. 
-<p align="center">
- <img src="figs/main-results.png" width="100%">
-</p>
-
-| Method       | S.RGB | Dep | Odo | SFT | RL | Sim | Real | QA | Map | SR ↑ (Val-Seen) | SPL ↑ (Val-Seen) | SR ↑ (Val-Seen-Synonyms) | SPL ↑ (Val-Seen-Synonyms) | SR ↑ (Val-Unseen) | SPL ↑ (Val-Unseen) |
-|--------------|-------|-----|-----|-----|----|-----|------|----|-----|-----------------|------------------|-------------------------|--------------------------|-------------------|--------------------|
-| BC           | ✔     |     |     |     |    | ✔   |      |    |     | 11.1            | 4.5              | 9.9                     | 3.8                      | 5.4               | 1.9                |
-| DAgger       | ✔     |     |     |     |    | ✔   |      |    |     | 11.1            | 4.5              | 9.9                     | 3.8                      | 5.4               | 1.9                |
-| RL           | ✔     |     |     |     | ✔  | ✔   |      |    |     | 18.1            | 9.4              | 15.0                    | 7.4                      | 10.2              | 4.7                |
-| DAgRL        | ✔     |     |     | ✔   | ✔  | ✔   |      |    |     | 41.3            | 21.2             | 29.4                    | 14.4                     | 18.3              | 7.9                |
-| BCRL         | ✔     |     |     | ✔   | ✔  | ✔   |      |    |     | 39.2            | 18.7             | 27.8                    | 11.7                     | 18.6              | 7.5                |
-| VLFM         | ✔     | ✔   | ✔   |     | ✔  | ✔   |      |    | ✔   | 35.2            | 18.6             | 32.4                    | 17.3                     | 35.2              | 19.6               |
-| DAgRL+OD     | ✔     |     |     | ✔   | ✔  | ✔   |      |    |     | 38.5            | 21.1             | 39.0                    | 21.4                     | 37.1              | 19.8               |
-| Nav-R1       | ✔     | ✔   |     | ✔   | ✔  | ✔   |      | ✔  |     | 58.4            | 26.3             | 48.1                    | 23.1                     | 42.2              | 20.1               |
-| MTU3D        | ✔     | ✔   |     | ✔   |    | ✔   | ✔    | ✔  | ✔   | 55.0            | 23.6             | 45.0                    | 14.7                     | 40.8              | 12.1               |
-| Uni-NaVid    | ✔     |     |     | ✔   |    | ✔   | ✔    | ✔  |     | 41.3            | 21.1             | 43.9                    | 21.8                     | 39.5              | 19.8               |
-| **Nav-R2**     | ✔     |     |     | ✔   |    | ✔   |      |    |     | 45.6            | 21.0             | 45.9                    | 21.1                     | 44.0              | 18.0               |
-
-## Ablation Study
-### Components in CoT
-<p align="center">
- <img src="figs/ablation-study-components-in-CoT.png" width="70%">
-</p>
-
-| Percep | Target-Env | Env-Task | SR ↑ (Val-Seen) | SPL ↑ (Val-Seen) | SR ↑ (Val-Seen-Synonyms) | SPL ↑ (Val-Seen-Synonyms) | SR ↑ (Val-Unseen) | SPL ↑ (Val-Unseen) |
-|--------|------------|----------|-----------------|------------------|-------------------------|--------------------------|-------------------|--------------------|
-|        |            |          | 22.7            | 14.8             | 17.4                    | 11.8                     | 14.8              | 10.0               |
-| ✔      |            |          | 25.4            | 16.5             | 28.1                    | 17.2                     | 24.5              | 15.9               |
-| ✔      | ✔          |          | 29.1            | 18.0             | 27.8                    | 17.9                     | 25.4              | 16.3               |
-| ✔      | ✔          | ✔        | 32.2            | 18.8             | 30.8                    | 18.8                     | 28.4              | 17.1               |
-
-### Memory Compression Strategy
-<p align="center">
- <img src="figs/ablation-study-memory-compression.png" width="60%">
-</p>
-
-| Instruction | Current Frame | SR ↑ (Val-Seen) | SPL ↑ (Val-Seen) | SR ↑ (Val-Seen-Synonyms) | SPL ↑ (Val-Seen-Synonyms) | SR ↑ (Val-Unseen) | SPL ↑ (Val-Unseen) |
-|-------------|---------------|-----------------|------------------|-------------------------|--------------------------|-------------------|--------------------|
-| ✔           |               | 42.2            | 21.5             | 37.5                    | 20.6                     | 39.8              | 20.5               |
-| ✔           | ✔             | 45.0            | 21.1             | 43.2                    | 20.9                     | 42.0              | 18.8               |
-
-
-### Memory Maintenance
-<p align="center">
- <img src="figs/ablation-study-memory-maintenance.png" width="60%">
-</p>
-
-| Removal | Fusion | Temp | Rele | SR ↑ (Val-Seen) | SPL ↑ (Val-Seen) | SR ↑ (Val-Seen-Synonyms) | SPL ↑ (Val-Seen-Synonyms) | SR ↑ (Val-Unseen) | SPL ↑ (Val-Unseen) |
-|---------|--------|------|------|-----------------|------------------|-------------------------|--------------------------|-------------------|--------------------|
-| ✔       |        | ✔    |      | 45.0            | 21.1             | 43.2                    | 20.9                     | 42.0              | 18.8               |
-| ✔       |        |      | ✔    | 47.7            | 20.6             | 44.8                    | 20.5                     | 41.1              | 16.4               |
-|         | ✔      | ✔    |      | 43.4            | 21.8             | 43.1                    | 21.8                     | 39.5              | 20.2               |
-|         | ✔      |      | ✔    | 45.6            | 21.0             | 45.9                    | 21.1                     | 44.0              | 18.0               |
-
