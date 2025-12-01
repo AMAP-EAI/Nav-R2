@@ -160,13 +160,12 @@ Our OVON dataset with reasoning data can be downloaded at: \
 #### Image Dataset
 The complete expert trajectory data(frame-by-frame images, frame-by-frame action names and so on) collected based on the OVON dataset from Habitat can be downloaded from the link below: \
 (1) [BaiduNetDisk(Uploading)](https://pan.baidu.com/s/12AJQ5TFq9fQCniJ-wC-hRg?pwd=6666) \
-(2) 
+(2) [ModelScope](https://www.modelscope.ai/datasets/XiangWentao666/Nav-R2-OVON-Expert-Trajectory-Images/files) 
 
 ### **Model Weight**:
 Pretrained Nav-R2 model weights can be downloaded at: \
 (1) [Huggingface](https://huggingface.co/Chrono666/Nav-R2) \
 (2) [aDrive(coming)]()
-
 
 ## Results on OVON
 Here shows the results on OVON dataset. Nav-R2 is trained via **ONLY SFT** receiving **ONLY RGB observations** from **ONLY first-person view**, and achieves the best SR on the val-unseen split. 
