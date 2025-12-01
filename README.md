@@ -1,23 +1,3 @@
-## TOC
-- [Overview](#overview)
-- [Pipeline and Structure](#pipeline-and-structure)
-- [Abstract](#abstract)
-- [Contributions](#contributions)
-- [Getting started with Nav-R2](#getting-started-with-nav-r2)
-    - [Training](#training)
-        - [(1) Install conda environment following](#1-install-conda-environment-following)
-        - [(2) Install extra libraries](#2-install-extra-libraries)
-        - [(3) Strat Training](#3-strat-training)
-    - [Evaluation](#evaluation)
-        - [(1) Install conda environment following steps below](#1-install-conda-environment-following-steps-below)
-        - [(2) Install extra libraries](#2-install-extra-libraries-1)
-    - [Datasets](#datasets)
-    - [Model Weight](#model-weight)
-- [Results on OVON](#results-on-ovon)
-- [Ablation Study](#ablation-study)
-    - [Components in CoT](#components-in-cot)
-    - [Memory Compression Strategy](#memory-compression-strategy)
-    - [Memory Maintenance](#memory-maintenance)
 
 
 # Nav-R2
@@ -52,6 +32,40 @@ Compared to previous methods, Nav-R2 achieves state-of-the-art performance in lo
 
 ## Getting started with Nav-R2
 
+### **Datasets Preparation**:
+#### Textual Dataset
+Our OVON text dataset with reasoning content can be downloaded at: \
+(1) [Huggingface](https://huggingface.co/datasets/Chrono666/Nav-R2-OVON-CoT-Dataset) \
+(2) [aDrive(coming)]()
+
+#### Image Dataset
+1. The complete expert trajectory data(frame-by-frame images, frame-by-frame action names and so on) collected based on the OVON dataset from Habitat can be downloaded from the link below: \
+(1) [ModelScope](https://www.modelscope.ai/datasets/XiangWentao666/Nav-R2-OVON-Expert-Trajectory-Images/files) \
+(2) [BaiduNetDisk(Uploading)](https://pan.baidu.com/s/12AJQ5TFq9fQCniJ-wC-hRg?pwd=6666) 
+2. Place all the archives downloaded to an empty folder named ```data``` or anything else you want.
+3. Execute ```cd data``` to enter the ```data``` folder.
+4. Unzip each zip file to current location directly through command ```unzip <ZIP-FILE-NAME> -d .``` Supposing current zip file is ```00434-L5QEsaVqwrY.zip``` and the directory starting from ```data``` folder after operation ```unzip``` should be ```data/objectnav_ovon/objectnav_ovon/00434-L5QEsaVqwrY```
+5. Currently we should be in the ```data``` folder, and please execute the following commands:\
+```mv ./objectnav_ovon ./objectnav_ovon-to-delete``` \
+```mv ./objectnav_ovon-to-delete/objectnav_ovon .``` \
+```rm -r ./objectnav_ovon-to-delete```. 
+6. Right now, the directory starting from ```data``` folder should be ```data/objectnav_ovon/00434-L5QEsaVqwrY```. 
+7. In the textual dataset, image paths are declared as ```objectnav_ovon/00434-L5QEsaVqwrY/16997/shower_96_2.89938/052_move_forward_FrontView.png```. We should modify the textual dataset to replace all image paths with absolute paths on our training platform. \
+Supposing the absolute path to our ```data``` folder is ```/a/b/c/data```, and the path to our ```Textual Dataset``` is ```/a/b/c/Nav-R2-OVON-dataset-20251126-1.json```, then the absolute path to one of the trajectory image files might be ```/a/b/c/data/objectnav_ovon/00434-L5QEsaVqwrY/16997/shower_96_2.89938/052_move_forward_FrontView.png```. Next, we should execute 
+```shell
+ABSOLUTE_PATH_TO_TEXTUAL_JSON_FILE="/a/b/c/Nav-R2-OVON-dataset-20251126-1.json" # replace "/a/b/c" when needed
+ABSOLUTE_PATH_TO_TEXTUAL_JSON_FILE_BACKUP="/a/b/c/Nav-R2-OVON-dataset-20251126-1.json-backup" # replace "/a/b/c" when needed
+cp ${ABSOLUTE_PATH_TO_TEXTUAL_JSON_FILE} ${ABSOLUTE_PATH_TO_TEXTUAL_JSON_FILE_BACKUP}
+OLD_STRING="objectnav_ovon/"
+NEW_STRING="/a/b/c/data/objectnav_ovon/" # replace "/a/b/c" when needed
+sed -i "s|${OLD_STRING}|${NEW_STRING}|g" ${ABSOLUTE_PATH_TO_TEXTUAL_JSON_FILE}
+```
+
+### **Model Weight**:
+Pretrained Nav-R2 model weights can be downloaded at: \
+(1) [Huggingface](https://huggingface.co/Chrono666/Nav-R2) \
+(2) [aDrive(coming soon)]()
+
 ### **Training**:
 #### (1) Install conda environment following
 ```conda create -n Nav-R2-training``` \
@@ -59,7 +73,7 @@ Compared to previous methods, Nav-R2 achieves state-of-the-art performance in lo
 
 **Attention:** \
 three libraries should be installed from source files in the environment-modules-customed folder: \
-transformers, trl, and flash_attn \
+```transformers```, ```trl```, and ```flash_attn```
 #### (2) Install extra libraries
 ```pip install -e environment-modules-customed/transformers_4.51.3-xwt-customed/transformers``` \
 ```pip install environment-modules-customed/flash_attn-2.7.4.post1+cu12torch2.6cxx11abiTRUE-cp310-cp310-linux_x86_64.whl``` \
@@ -68,8 +82,8 @@ transformers, trl, and flash_attn \
 To start training, use ms-swift framework and apply our modifications to the framework, then run through a shell script(switch running command to torchrun when it is needed like run in a distributed mode):
 ```shell
 model_path=""
-data_path=""
-valid_data_path=""
+data_path="/a/b/c/Nav-R2-OVON-dataset-20251126-1.json" # replace "/a/b/c" when needed
+valid_data_path="" # any subset of training dataset is accepted
 output_dir=""
 
 current_img_num=1
@@ -79,12 +93,12 @@ per_device_train_batch_size=4
 gradient_accumulation_steps=1
 
 num_train_epochs=1  
-save_steps=1111111111
+save_steps=1111111111 # do not save checkpoints during training for a faster training.
 learning_rate=2e-4  
 
 resize_history_img=true
 use_StdTemplateInputs_Customed_by_XWT=true
-is_on_PAI=false
+is_on_PAI=false # not important but can not be None or absent
 
 args="--model $model_path \
     --deepspeed ${deepspeed_strategy} \
@@ -125,10 +139,11 @@ python swift/cli/sft.py ${args}
 ### **Evaluation**: 
 #### (1) Install conda environment following steps below:
 ```shell
-conda create -n Nav-R2-evaluation python=3.9.19
+conda create -n Nav-R2-evaluation python=3.9.19 
+```
+```shell
 pip install -r requirements-for-evaluation-on-OVON.txt
 ```
-
 **Attention:** \
 four libraries should be installed from source files in the environment-modules-customed folder: \
 flash_attn, transformers, habitat_lab, and habitat-baseline:
@@ -149,23 +164,6 @@ cd Nav-R2-evaluation-ovon
 ./eval_citywalker_ovon.sh 0,1,2,3,4,5 # for running in a parallel way on multiple gpus 
 ./eval_citywalker_ovon.sh 0,1,2,3,4,5 1 # for debug using only one gpu
 ```
-
-
-### **Datasets**:
-#### Textual Dataset
-Our OVON dataset with reasoning data can be downloaded at: \
-(1) [Huggingface](https://huggingface.co/datasets/Chrono666/Nav-R2-OVON-CoT-Dataset) \
-(2) [aDrive(coming)]()
-
-#### Image Dataset
-The complete expert trajectory data(frame-by-frame images, frame-by-frame action names and so on) collected based on the OVON dataset from Habitat can be downloaded from the link below: \
-(1) [BaiduNetDisk(Uploading)](https://pan.baidu.com/s/12AJQ5TFq9fQCniJ-wC-hRg?pwd=6666) \
-(2) [ModelScope](https://www.modelscope.ai/datasets/XiangWentao666/Nav-R2-OVON-Expert-Trajectory-Images/files) 
-
-### **Model Weight**:
-Pretrained Nav-R2 model weights can be downloaded at: \
-(1) [Huggingface](https://huggingface.co/Chrono666/Nav-R2) \
-(2) [aDrive(coming)]()
 
 ## Results on OVON
 Here shows the results on OVON dataset. Nav-R2 is trained via **ONLY SFT** receiving **ONLY RGB observations** from **ONLY first-person view**, and achieves the best SR on the val-unseen split. 
