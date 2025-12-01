@@ -1,6 +1,23 @@
-
-
 # Nav-R2
+
+- [Overview](#overview)
+    - [Pipeline and Structure](#pipeline-and-structure)
+- [Abstract](#abstract)
+- [Contributions](#contributions)
+- [Getting started with Nav-R2](#getting-started-with-nav-r2)
+    - [Datasets Preparation](#datasets-preparation)
+        - [Textual Dataset](#textual-dataset)
+        - [Image Dataset](#image-dataset)
+    - [Model Weight](#model-weight)
+    - [Training](#training)
+    - [Evaluation](#evaluation)
+- [Results on OVON](#results-on-ovon)
+- [Ablation Study](#ablation-study)
+    - [Components in CoT](#components-in-cot)
+    - [Memory Compression Strategy](#memory-compression-strategy)
+    - [Memory Maintenance](#memory-maintenance)
+
+
 <!-- [![paper](https://img.shields.io/badge/arXiv-Paper-blue.svg)](https://arxiv.org/abs/) -->
 Official Implementation of paper: ```Nav-R2:Dual‑Relation Reasoning for Generalizable Open‑Vocabulary Object‑Goal Navigation```
 <p align="center">
