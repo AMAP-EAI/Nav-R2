@@ -1,0 +1,3 @@
+[submodule "agent"]
+	path = agent
+	url = http://gitlab.alibaba-inc.com/tenan.xsc/citywalker_agent.git
