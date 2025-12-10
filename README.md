@@ -1,8 +1,24 @@
 # Nav-R2
 
-<!-- [![paper](https://img.shields.io/badge/arXiv-Paper-blue.svg)](https://arxiv.org/abs/) -->
-Official Implementation of paper: \
-```Nav-R2:Dual‑Relation Reasoning for Generalizable Open‑Vocabulary Object‑Goal Navigation```
+[![Paper](https://img.shields.io/badge/ArXiv-Paper-brown)](https://arxiv.org/abs/2512.02400)
+[![Code](https://img.shields.io/badge/GitHub-Code-blue)](https://github.com/AMAP-EAI/Nav-R2)
+[![Model](https://img.shields.io/badge/HuggingFace-Model-yellow)](https://huggingface.co/Chrono666/Nav-R2/tree/main)
+
+<!-- ; [Evaluation--hm3d-scenes_dir](https://www.modelscope.ai/datasets/XiangWentao666/Nav-R2-hm3d-scenes-dir/files); 
+[Evaluation--hm3d-ovon](https://www.modelscope.ai/datasets/XiangWentao666/Nav-R2-hm3d-ovon/files); 
+[OVON-Expert-Trajectory-Images](https://www.modelscope.ai/datasets/XiangWentao666/Nav-R2-OVON-Expert-Trajectory-Images/files) -->
+
+<!-- Official Implementation of paper: \ -->
+<!-- ```Nav-R2:Dual‑Relation Reasoning for Generalizable Open‑Vocabulary Object‑Goal Navigation``` -->
+
+
+<!-- <p align="center">
+ <img src="figs/title.png" width="100%">
+</p> -->
+<p align="center">
+ <img src="figs/teaser.png" width="100%">
+</p>
+
 
 
 ## Table of Contents
@@ -28,13 +44,6 @@ Official Implementation of paper: \
 
 
 
-
-<p align="center">
- <img src="figs/title.png" width="100%">
-</p>
-<p align="center">
- <img src="figs/teaser.png" width="100%">
-</p>
 
 ## Overview
 ### Pipeline and Structure
